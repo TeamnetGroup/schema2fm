@@ -32,10 +32,17 @@ namespace ConsoleApp
                 case "int":
                     return ".AsInt32()";
                 case "nvarchar":
-                    return $".AsString({maxLength/2})";
+                    return $".AsString({StringLengthDescription()})";
                 default:
                     return $".As{type}()";
             }
+        }
+
+        private string StringLengthDescription()
+        {
+            return maxLength == -1 ?
+                "int.MaxValue"
+              : $"{maxLength/2}";
         }
 
         private string NullabilityDescription()
