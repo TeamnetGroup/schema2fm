@@ -22,7 +22,25 @@ namespace ConsoleApp
 
         public string FluentMigratorCode()
         {
-            return $"                  .WithColumn(\"{name}\")";
+            return $"                  .WithColumn(\"{name}\"){TypeDescription()}{NullabilityDescription()}";
+        }
+
+        private string TypeDescription()
+        {
+            switch (type)
+            {
+                case "int":
+                    return ".AsInt32()";
+                case "nvarchar":
+                    return $".AsString({maxLength/2})";
+                default:
+                    return $".As{type}()";
+            }
+        }
+
+        private string NullabilityDescription()
+        {
+            return isNullable ? ".Nullable()" : ".NotNullable()";
         }
     }
 }
