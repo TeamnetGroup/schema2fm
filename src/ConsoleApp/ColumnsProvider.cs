@@ -8,10 +8,15 @@ namespace ConsoleApp
 {
     public class ColumnsProvider
     {
+        private readonly string connectionString;
+
+        public ColumnsProvider(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
         public async Task<IEnumerable<string>> GetColumnsAsync(string schemaName, string tableName)
         {
-            const string connectionString = @"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;";
-
             using (DbConnection connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();

@@ -7,7 +7,7 @@ namespace ConsoleApp
     {
         private static void Main()
         {
-            var columnsProvider = new ColumnsProvider();
+            var columnsProvider = new ColumnsProvider(@"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;");
             var columns = columnsProvider.GetColumnsAsync("dbo", "Book").GetAwaiter().GetResult();
             columns.ToList().ForEach(WriteLine);
         }
