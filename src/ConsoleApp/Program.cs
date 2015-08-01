@@ -7,7 +7,16 @@ namespace ConsoleApp
 {
     public class Table
     {
-        public void OutputMigrationCode(string tableName, IEnumerable<Column> columns)
+        private readonly string tableName;
+        private readonly IEnumerable<Column> columns;
+
+        public Table(string tableName, IEnumerable<Column> columns)
+        {
+            this.tableName = tableName;
+            this.columns = columns;
+        }
+
+        public void OutputMigrationCode()
         {
             var writer = Out;
 
@@ -50,7 +59,7 @@ namespace ConsoleApp
             var tableName = "Book";
             var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
 
-            new Table().OutputMigrationCode(tableName, columns);
+            new Table(tableName, columns).OutputMigrationCode();
         }
     }
 }
