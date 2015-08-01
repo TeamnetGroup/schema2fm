@@ -19,5 +19,10 @@ namespace ConsoleApp
         {
             return $"Column {name} is {type}({maxLength}) and {isNullable}";
         }
+
+        public string FluentMigratorCode()
+        {
+            return $"                  .WithColumn(\"{name}\")";
+        }
     }
 }

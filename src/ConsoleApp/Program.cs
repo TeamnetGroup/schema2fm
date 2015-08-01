@@ -25,11 +25,16 @@ namespace ConsoleApp
         {
             Create.Table(""");
             writer.Write(tableName);
-            writer.WriteLine(@""")");
+            writer.Write(@""")");
 
-            columns.ToList().ForEach(writer.WriteLine);
+            columns.ToList().ForEach(c =>
+            {
+                writer.WriteLine();
+                writer.Write(c.FluentMigratorCode());
+            });
 
-            writer.WriteLine(@"        }
+            writer.WriteLine(@";
+        }
 
         public override void Down()
         {
