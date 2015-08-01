@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace ConsoleApp
 {
@@ -10,14 +12,13 @@ namespace ConsoleApp
     {
         private static void Main()
         {
-            Work().GetAwaiter().GetResult();
+            var columns = GetColumnsAsync("dbo", "Book").GetAwaiter().GetResult();
+            columns.ToList().ForEach(WriteLine);
         }
 
-        private static async Task Work()
+        private static async Task<IEnumerable<string>> GetColumnsAsync(string schemaName, string tableName)
         {
             const string connectionString = @"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;";
-            const string schemaName = "dbo";
-            const string tableName = "Book";
 
             using (DbConnection connection = new SqlConnection(connectionString))
             {
@@ -46,14 +47,17 @@ where s.name = @schemaName and t.name = @tableName";
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
+                        var columns = new List<string>();
                         while (await reader.ReadAsync())
                         {
                             var columnName = reader.GetFieldValue<string>(0);
                             var isNullable = reader.GetFieldValue<bool>(1);
                             var maxLength = reader.GetFieldValue<short>(2);
                             var type = reader.GetFieldValue<string>(3);
-                            Console.WriteLine($"Column {columnName} is {type}({maxLength}) and {isNullable}");
+                            columns.Add($"Column {columnName} is {type}({maxLength}) and {isNullable}");
                         }
+
+                        return columns;
                     }
                 }
             }
