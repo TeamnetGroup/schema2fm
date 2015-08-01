@@ -8,15 +8,9 @@ using static System.Console;
 
 namespace ConsoleApp
 {
-    class Program
+    public class ColumnsProvider
     {
-        private static void Main()
-        {
-            var columns = GetColumnsAsync("dbo", "Book").GetAwaiter().GetResult();
-            columns.ToList().ForEach(WriteLine);
-        }
-
-        private static async Task<IEnumerable<string>> GetColumnsAsync(string schemaName, string tableName)
+        public async Task<IEnumerable<string>> GetColumnsAsync(string schemaName, string tableName)
         {
             const string connectionString = @"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;";
 
@@ -61,6 +55,16 @@ where s.name = @schemaName and t.name = @tableName";
                     }
                 }
             }
+        }
+    }
+
+    class Program
+    {
+        private static void Main()
+        {
+            var columnsProvider = new ColumnsProvider();
+            var columns = columnsProvider.GetColumnsAsync("dbo", "Book").GetAwaiter().GetResult();
+            columns.ToList().ForEach(WriteLine);
         }
     }
 }
