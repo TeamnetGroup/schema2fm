@@ -37,12 +37,14 @@ namespace ConsoleApp
                 writer.Write(c.FluentMigratorCode());
             });
 
-            writer.WriteLine(@";
+            writer.Write(@";
         }
 
         public override void Down()
         {
-            // nothing here yet
+            Delete.Table(""");
+            writer.Write(tableName);
+            writer.WriteLine(@""")
         }
     }
 }");
