@@ -25,7 +25,10 @@ namespace ConsoleApp
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = @"select t.object_id from sys.tables t
+                    command.CommandText = @"select c.name, c.is_nullable, c.max_length, types.name [type] from sys.columns c
+inner join sys.types types on c.system_type_id = types.user_type_id
+inner join sys.tables t
+on t.object_id = c.object_id
 inner join sys.schemas s
 on t.schema_id = s.schema_id
 where s.name = @schemaName and t.name = @tableName";
@@ -45,8 +48,11 @@ where s.name = @schemaName and t.name = @tableName";
                     {
                         while (await reader.ReadAsync())
                         {
-                            var tableId = reader.GetFieldValue<int>(0);
-                            Console.WriteLine($"Table has object id {tableId}");
+                            var columnName = reader.GetFieldValue<string>(0);
+                            var isNullable = reader.GetFieldValue<bool>(1);
+                            var maxLength = reader.GetFieldValue<short>(2);
+                            var type = reader.GetFieldValue<string>(3);
+                            Console.WriteLine($"Column {columnName} is {type}({maxLength}) and {isNullable}");
                         }
                     }
                 }
