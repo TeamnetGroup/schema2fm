@@ -54,9 +54,12 @@ namespace ConsoleApp
     {
         private static void Main()
         {
-            var columnsProvider = new ColumnsProvider(@"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;");
+            var connectionString = @"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;";
+            var schemaName = "dbo";
             var tableName = "Book";
-            var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
+
+            var columnsProvider = new ColumnsProvider(connectionString);
+            var columns = columnsProvider.GetColumnsAsync(schemaName, tableName).GetAwaiter().GetResult();
 
             new Table(tableName, columns).OutputMigrationCode(Out);
         }
