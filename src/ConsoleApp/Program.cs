@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using static System.Console;
 
@@ -12,6 +13,11 @@ namespace ConsoleApp
             var tableName = "Book";
             var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
 
+            OutputMigrationCode(tableName, columns);
+        }
+
+        private static void OutputMigrationCode(string tableName, IEnumerable<Column> columns)
+        {
             var writer = Out;
 
             writer.Write(@"namespace Cucu
