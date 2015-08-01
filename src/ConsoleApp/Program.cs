@@ -5,18 +5,9 @@ using static System.Console;
 
 namespace ConsoleApp
 {
-    class Program
+    public class Table
     {
-        private static void Main()
-        {
-            var columnsProvider = new ColumnsProvider(@"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;");
-            var tableName = "Book";
-            var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
-
-            OutputMigrationCode(tableName, columns);
-        }
-
-        private static void OutputMigrationCode(string tableName, IEnumerable<Column> columns)
+        public void OutputMigrationCode(string tableName, IEnumerable<Column> columns)
         {
             var writer = Out;
 
@@ -48,6 +39,18 @@ namespace ConsoleApp
         }
     }
 }");
+        }
+    }
+
+    class Program
+    {
+        private static void Main()
+        {
+            var columnsProvider = new ColumnsProvider(@"Server=.\SQLEXPRESS;Database=LearnORM;Trusted_Connection=True;");
+            var tableName = "Book";
+            var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
+
+            new Table().OutputMigrationCode(tableName, columns);
         }
     }
 }
