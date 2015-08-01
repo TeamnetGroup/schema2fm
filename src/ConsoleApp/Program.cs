@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static System.Console;
 
@@ -16,10 +17,8 @@ namespace ConsoleApp
             this.columns = columns;
         }
 
-        public void OutputMigrationCode()
+        public void OutputMigrationCode(TextWriter writer)
         {
-            var writer = Out;
-
             writer.Write(@"namespace Cucu
 {
     [Migration(");
@@ -59,7 +58,7 @@ namespace ConsoleApp
             var tableName = "Book";
             var columns = columnsProvider.GetColumnsAsync("dbo", tableName).GetAwaiter().GetResult();
 
-            new Table(tableName, columns).OutputMigrationCode();
+            new Table(tableName, columns).OutputMigrationCode(Out);
         }
     }
 }
