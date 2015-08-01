@@ -6,6 +6,27 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
+    public class Column
+    {
+        private readonly string name;
+        private readonly string type;
+        private readonly bool isNullable;
+        private readonly short maxLength;
+
+        public Column(string name, string type, bool isNullable, short maxLength)
+        {
+            this.name = name;
+            this.type = type;
+            this.isNullable = isNullable;
+            this.maxLength = maxLength;
+        }
+
+        public override string ToString()
+        {
+            return $"Column {name} is {type}({maxLength}) and {isNullable}";
+        }
+    }
+
     public class ColumnsProvider
     {
         private readonly string connectionString;
@@ -15,7 +36,7 @@ namespace ConsoleApp
             this.connectionString = connectionString;
         }
 
-        public async Task<IEnumerable<string>> GetColumnsAsync(string schemaName, string tableName)
+        public async Task<IEnumerable<Column>> GetColumnsAsync(string schemaName, string tableName)
         {
             using (DbConnection connection = new SqlConnection(connectionString))
             {
@@ -44,14 +65,14 @@ where s.name = @schemaName and t.name = @tableName";
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
-                        var columns = new List<string>();
+                        var columns = new List<Column>();
                         while (await reader.ReadAsync())
                         {
                             var columnName = reader.GetFieldValue<string>(0);
                             var isNullable = reader.GetFieldValue<bool>(1);
                             var maxLength = reader.GetFieldValue<short>(2);
                             var type = reader.GetFieldValue<string>(3);
-                            columns.Add($"Column {columnName} is {type}({maxLength}) and {isNullable}");
+                            columns.Add(new Column(columnName, type, isNullable, maxLength));
                         }
 
                         return columns;
