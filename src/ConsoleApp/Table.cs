@@ -44,7 +44,7 @@ namespace ConsoleApp
         {
             Delete.Table(""");
             writer.Write(tableName);
-            writer.WriteLine(@""")
+            writer.WriteLine(@""");
         }
     }
 }");
