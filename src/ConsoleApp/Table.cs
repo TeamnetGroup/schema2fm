@@ -22,14 +22,12 @@ namespace ConsoleApp
 {
     [Migration(");
             writer.Write(DateTime.Now.ToString("yyyyMMddHHmmss"));
-            writer.Write(@")]
+            writer.WriteLine(@")]
     public class Vaca : Migration
     {
         public override void Up()
-        {
-            Create.Table(""");
-            writer.Write(tableName);
-            writer.Write(@""")");
+        {");
+            writer.Write($"            Create.Table(\"{tableName}\")");
 
             columns.ToList().ForEach(c =>
             {
@@ -37,14 +35,13 @@ namespace ConsoleApp
                 writer.Write(c.FluentMigratorCode());
             });
 
-            writer.Write(@";
+            writer.WriteLine(@";
         }
 
         public override void Down()
-        {
-            Delete.Table(""");
-            writer.Write(tableName);
-            writer.WriteLine(@""");
+        {");
+            writer.Write($"            Delete.Table(\"{tableName}\");");
+            writer.WriteLine(@"
         }
     }
 }");
