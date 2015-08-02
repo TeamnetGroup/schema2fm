@@ -18,35 +18,40 @@ namespace ConsoleApp
 
         public void OutputMigrationCode(TextWriter writer)
         {
-            const string format = "yyyyMMddHHmmss";
-            writer.WriteLine(@"using FluentMigrator;
+            var version = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-namespace Migrations
-{");
-            writer.WriteLine($"    [Migration(\"{DateTime.Now.ToString(format)}\")]");
-            writer.Write($"    public class {tableName}Migration : Migration");
-            writer.WriteLine(@"
-    {
-        public override void Up()
-        {");
-            writer.Write($"            Create.Table(\"{tableName}\")");
+            writer.WriteLine( "using FluentMigrator;");
+            writer.WriteLine();
+            writer.WriteLine( "namespace Migrations");
+            writer.WriteLine( "{");
+            writer.WriteLine($"    [Migration({version})]");
+            writer.WriteLine($"    public class {tableName}Migration : Migration");
+            writer.WriteLine( "    {");
+            writer.WriteLine( "        public override void Up()");
+            writer.WriteLine( "        {");
+            writer.Write    ($"            Create.Table(\"{tableName}\")");
 
+            OutputColumnDefinitions(writer);
+
+            writer.WriteLine( "        }");
+            writer.WriteLine();
+            writer.WriteLine( "        public override void Down()");
+            writer.WriteLine( "        {");
+            writer.WriteLine($"            Delete.Table(\"{tableName}\");");
+            writer.WriteLine( "        }");
+            writer.WriteLine( "    }");
+            writer.WriteLine( "}");
+        }
+
+        private void OutputColumnDefinitions(TextWriter writer)
+        {
             columns.ToList().ForEach(c =>
             {
                 writer.WriteLine();
                 writer.Write(c.FluentMigratorCode());
             });
 
-            writer.WriteLine(@";
-        }
-
-        public override void Down()
-        {");
-            writer.Write($"            Delete.Table(\"{tableName}\");");
-            writer.WriteLine(@"
-        }
-    }
-}");
+            writer.WriteLine(@";");
         }
     }
 }
