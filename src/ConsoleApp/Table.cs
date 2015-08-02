@@ -19,7 +19,9 @@ namespace ConsoleApp
         public void OutputMigrationCode(TextWriter writer)
         {
             const string format = "yyyyMMddHHmmss";
-            writer.WriteLine(@"namespace Migrations
+            writer.WriteLine(@"using FluentMigrator;
+
+namespace Migrations
 {");
             writer.WriteLine($"    [Migration(\"{DateTime.Now.ToString(format)}\")]");
             writer.Write($"    public class {tableName}Migration : Migration");
